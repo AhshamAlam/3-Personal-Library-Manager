@@ -435,8 +435,8 @@ fetch_library_data()
 st.sidebar.markdown("<h1 style='text-align: center;'>📋 Menu</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("""
     <div style="text-align: center;">
-        <h1>📚 My Book Haven</h1>
-        <p>✨ Your personal reading sanctuary ✨</p>
+        <h1 style="color: var(--text-color);">📚 My Book Haven</h1>
+        <p style="color: var(--text-color);">✨ Your personal reading sanctuary ✨</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -457,7 +457,7 @@ elif nav_options == "📊 Reading Insights":
     st.session_state.active_section = "stats"
 
 # Main page header
-st.markdown("<h1 class='main-header'>📚 My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header' style='color: var(--text-color);'>📚 My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
 
 # Add Book View
 if st.session_state.active_section == "add":
