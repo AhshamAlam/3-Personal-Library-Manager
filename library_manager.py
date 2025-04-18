@@ -37,14 +37,14 @@ st.markdown("""
 <style>
     /* Color Variables */
     :root {
-        --primary-color: #4F46E5;
-        --secondary-color: #7C3AED;
-        --accent-color: #EC4899;
-        --success-color: #10B981;
-        --warning-color: #F59E0B;
-        --danger-color: #EF4444;
-        --text-color: #1F2937;
-        --bg-color: #F9FAFB;
+        --primary-color: #2C3E50;
+        --secondary-color: #34495E;
+        --accent-color: #3498DB;
+        --success-color: #27AE60;
+        --warning-color: #E67E22;
+        --danger-color: #E74C3C;
+        --text-color: #2C3E50;
+        --bg-color: #ECF0F1;
         --card-bg: #FFFFFF;
     }
 
@@ -67,14 +67,14 @@ st.markdown("""
         font-weight: 600;
         margin-top: 1rem;
         margin-bottom: 1rem;
-        border-bottom: 3px solid var(--accent-color);
+        border-bottom: 2px solid var(--accent-color);
         padding-bottom: 0.5rem;
     }
 
     /* Success message styling */
     .success-message {
         padding: 1rem;
-        background-color: rgba(16, 185, 129, 0.1);
+        background-color: rgba(39, 174, 96, 0.1);
         border-left: 4px solid var(--success-color);
         border-radius: 0.375rem;
         color: var(--success-color);
@@ -83,7 +83,7 @@ st.markdown("""
     /* Warning message styling */
     .warning-message {
         padding: 1rem;
-        background-color: rgba(245, 158, 11, 0.1);
+        background-color: rgba(230, 126, 34, 0.1);
         border-left: 4px solid var(--warning-color);
         border-radius: 0.375rem;
         color: var(--warning-color);
@@ -93,40 +93,38 @@ st.markdown("""
     .book-card {
         padding: 1.5rem;
         background-color: var(--card-bg);
-        border-left: 4px solid var(--primary-color);
-        border-radius: 0.75rem;
+        border-left: 4px solid var(--accent-color);
+        border-radius: 0.5rem;
         margin-bottom: 1rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     /* Hover effect for book cards */
     .book-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid var(--accent-color);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary-color);
     }
 
     /* Read status badge styling */
     .read-badge {
         padding: 0.5rem 1rem;
-        background: linear-gradient(45deg, var(--success-color), #34D399);
+        background-color: var(--success-color);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
     }
 
     /* Unread status badge styling */
     .unread-badge {
         padding: 0.5rem 1rem;
-        background: linear-gradient(45deg, var(--warning-color), #FBBF24);
+        background-color: var(--warning-color);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
-        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
     }
 
     /* Action button spacing */
@@ -136,8 +134,8 @@ st.markdown("""
 
     /* Button styling */
     .stButton>button {
-        border-radius: 0.5rem;
-        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border-radius: 0.375rem;
+        background-color: var(--accent-color);
         color: white;
         border: none;
         padding: 0.5rem 1rem;
@@ -146,44 +144,44 @@ st.markdown("""
     }
 
     .stButton>button:hover {
-        background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     /* Form input styling */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input,
     .stSelectbox>div>div>select {
-        border-radius: 0.5rem;
-        border: 2px solid #E5E7EB;
+        border-radius: 0.375rem;
+        border: 1px solid #BDC3C7;
         padding: 0.5rem;
     }
 
     .stTextInput>div>div>input:focus,
     .stNumberInput>div>div>input:focus,
     .stSelectbox>div>div>select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
     }
 
     /* Radio button styling */
     .stRadio>div {
         background-color: var(--bg-color);
         padding: 1rem;
-        border-radius: 0.5rem;
+        border-radius: 0.375rem;
     }
 
     /* Sidebar styling */
     .css-1d391kg {
-        background: linear-gradient(180deg, var(--bg-color), #FFFFFF);
+        background-color: var(--bg-color);
     }
 
     /* Metric card styling */
     .stMetric {
         background-color: var(--card-bg);
         padding: 1rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 </style>
 """, unsafe_allow_html=True)
