@@ -356,45 +356,45 @@ def generate_visualizations(metrics: dict) -> None:
 fetch_library_data()
 
 # Create sidebar navigation
-st.sidebar.markdown("<h1 style='text-align: center;'>Menu</h1>", unsafe_allow_html=True)
+st.sidebar.markdown("<h1 style='text-align: center;'>📋 Menu</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("""
     <div style="text-align: center;">
         <h1>📚 My Book Haven</h1>
-        <p>Your personal reading sanctuary</p>
+        <p>✨ Your personal reading sanctuary ✨</p>
     </div>
     """, unsafe_allow_html=True)
 
 # Create navigation options
 nav_options = st.sidebar.radio(
-    "Explore Options",
-    ["Browse Collection", "Add New Title", "Find Books", "Reading Insights"]
+    "🔍 Explore Options",
+    ["📖 Browse Collection", "➕ Add New Title", "🔎 Find Books", "📊 Reading Insights"]
 )
 
 # Set current view based on navigation selection
-if nav_options == "Browse Collection":
+if nav_options == "📖 Browse Collection":
     st.session_state.active_section = "library"
-elif nav_options == "Add New Title":
+elif nav_options == "➕ Add New Title":
     st.session_state.active_section = "add"
-elif nav_options == "Find Books":
+elif nav_options == "🔎 Find Books":
     st.session_state.active_section = "search"
-elif nav_options == "Reading Insights":
+elif nav_options == "📊 Reading Insights":
     st.session_state.active_section = "stats"
 
 # Main page header
-st.markdown("<h1 class='main-header'>My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'>📚 My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
 
 # Add Book View
 if st.session_state.active_section == "add":
-    st.markdown("<h2 class='sub-header'>Expand Your Collection</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 class='sub-header'>➕ Expand Your Collection</h2>", unsafe_allow_html=True)
 
     with st.form(key="add_book_form"):
         col1, col2 = st.columns(2)
 
         with col1:
-            title = st.text_input("Book Title", max_chars=100)
-            author = st.text_input("Author's Name", max_chars=100)
+            title = st.text_input("📖 Book Title", max_chars=100)
+            author = st.text_input("✍️ Author's Name", max_chars=100)
             publication_year = st.number_input(
-                "Year Published",
+                "📅 Year Published",
                 min_value=1000,
                 max_value=datetime.now().year,
                 step=1,
@@ -403,108 +403,108 @@ if st.session_state.active_section == "add":
 
         with col2:
             genre = st.selectbox(
-                "Category",
-                ["Gaming", "Crime", "Philosophy", "Fantasy", "History", "Science Fiction", "Memoir", "Biography", "Self-Help", "Humor"]
+                "🏷️ Category",
+                ["🎮 Gaming", "🔍 Crime", "🤔 Philosophy", "🐉 Fantasy", "📜 History", "🚀 Science Fiction", "📝 Memoir", "👤 Biography", "💪 Self-Help", "😂 Humor"]
             )
-            read_status = st.radio("Reading Status", ["Completed", "To Read"], horizontal=True)
-            read_bool = read_status == "Completed"
+            read_status = st.radio("📚 Reading Status", ["✅ Completed", "⏳ To Read"], horizontal=True)
+            read_bool = read_status == "✅ Completed"
 
-        submit_button = st.form_submit_button(label="Add to Collection")
+        submit_button = st.form_submit_button(label="✨ Add to Collection")
 
         if submit_button:
             insert_book(title, author, publication_year, genre, read_bool)
 
     if st.session_state.new_book_flag:
-        st.markdown("<div class='success-message'>New title added to your collection!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='success-message'>✨ New title added to your collection!</div>", unsafe_allow_html=True)
         st.session_state.new_book_flag = False
 
 # View Library
 elif st.session_state.active_section == "library":
-    st.markdown("<h2 class='sub-header'>Your Reading Collection</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 class='sub-header'>📚 Your Reading Collection</h2>", unsafe_allow_html=True)
 
     if not st.session_state.book_collection:
-        st.markdown("<div class='warning-message'>Your collection is empty. Start adding some titles!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='warning-message'>📚 Your collection is empty. Start adding some titles!</div>", unsafe_allow_html=True)
     else:
         cols = st.columns(2)
         for i, book in enumerate(st.session_state.book_collection):
             with cols[i % 2]:
                 st.markdown(f"""
                 <div class='book-card'>
-                    <h3>{book['title']}</h3>
-                    <p><strong>Author:</strong> {book['author']}</p>
-                    <p><strong>Published:</strong> {book['publication_year']}</p>
-                    <p><strong>Category:</strong> {book['genre']}</p>
-                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"Completed" if book['read_status'] else "To Read"}</span></p>
+                    <h3>📖 {book['title']}</h3>
+                    <p><strong>✍️ Author:</strong> {book['author']}</p>
+                    <p><strong>📅 Published:</strong> {book['publication_year']}</p>
+                    <p><strong>🏷️ Category:</strong> {book['genre']}</p>
+                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"✅ Completed" if book['read_status'] else "⏳ To Read"}</span></p>
                 </div>
                 """, unsafe_allow_html=True)
 
                 col1, col2 = st.columns(2)
                 with col1:
-                    if st.button(f"Remove", key=f"remove_{i}", use_container_width=True):
+                    if st.button(f"🗑️ Remove", key=f"remove_{i}", use_container_width=True):
                         if delete_book(i):
                             st.rerun()
                 with col2:
                     new_status = not book['read_status']
-                    status_label = "Mark as Completed" if not book['read_status'] else "Mark as To Read"
+                    status_label = "✅ Mark as Completed" if not book['read_status'] else "⏳ Mark as To Read"
                     if st.button(status_label, key=f"status_{i}", use_container_width=True):
                         st.session_state.book_collection[i]['read_status'] = new_status
                         persist_library_data()
                         st.rerun()
 
     if st.session_state.book_deleted_flag:
-        st.markdown("<div class='success-message'>Title removed from your collection!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='success-message'>🗑️ Title removed from your collection!</div>", unsafe_allow_html=True)
         st.session_state.book_deleted_flag = False
 
 # Search Books View
 elif st.session_state.active_section == "search":
-    st.markdown("<h2 class='sub-header'>Discover Titles</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 class='sub-header'>🔍 Discover Titles</h2>", unsafe_allow_html=True)
 
-    search_by = st.selectbox("Search by", ["Title", "Author", "Category"])
-    search_term = st.text_input("Enter search term")
+    search_by = st.selectbox("🔍 Search by", ["📖 Title", "✍️ Author", "🏷️ Category"])
+    search_term = st.text_input("🔎 Enter search term")
 
-    if st.button("Search", use_container_width=False):
+    if st.button("🔍 Search", use_container_width=False):
         if search_term:
-            with st.spinner("Exploring your collection..."):
+            with st.spinner("🔍 Exploring your collection..."):
                 find_books(search_term, search_by)
                 time.sleep(0.5)
 
     if hasattr(st.session_state, 'search_output'):
         if st.session_state.search_output:
-            st.markdown(f"<h3>Found {len(st.session_state.search_output)} Matches</h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>✨ Found {len(st.session_state.search_output)} Matches</h3>", unsafe_allow_html=True)
 
             for i, book in enumerate(st.session_state.search_output):
                 st.markdown(f"""
                 <div class='book-card'>
-                    <h3>{book['title']}</h3>
-                    <p><strong>Author:</strong> {book['author']}</p>
-                    <p><strong>Published:</strong> {book['publication_year']}</p>
-                    <p><strong>Category:</strong> {book['genre']}</p>
-                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"Completed" if book['read_status'] else "To Read"}</span></p>
+                    <h3>📖 {book['title']}</h3>
+                    <p><strong>✍️ Author:</strong> {book['author']}</p>
+                    <p><strong>📅 Published:</strong> {book['publication_year']}</p>
+                    <p><strong>🏷️ Category:</strong> {book['genre']}</p>
+                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"✅ Completed" if book['read_status'] else "⏳ To Read"}</span></p>
                 </div>
                 """, unsafe_allow_html=True)
         elif search_term:
-            st.markdown("<div class='warning-message'>No matches found. Try a different search term.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='warning-message'>🔍 No matches found. Try a different search term.</div>", unsafe_allow_html=True)
 
 # Library Statistics View
 elif st.session_state.active_section == "stats":
-    st.markdown("<h2 class='sub-header'>Reading Insights</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 class='sub-header'>📊 Reading Insights</h2>", unsafe_allow_html=True)
 
     if not st.session_state.book_collection:
-        st.markdown("<div class='warning-message'>Your collection is empty. Start adding some titles!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='warning-message'>📚 Your collection is empty. Start adding some titles!</div>", unsafe_allow_html=True)
     else:
         stats = compute_library_metrics()
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Total Titles", value=stats['total_books'])
+            st.metric("📚 Total Titles", value=stats['total_books'])
         with col2:
-            st.metric("Completed", value=stats['read_books'])
+            st.metric("✅ Completed", value=stats['read_books'])
         with col3:
-            st.metric("Completion Rate", f"{stats['percent_read']:.1f}%")
+            st.metric("📈 Completion Rate", f"{stats['percent_read']:.1f}%")
 
         generate_visualizations(stats)
 
         if stats['authors']:
-            st.markdown("<h3>Favorite Authors</h3>", unsafe_allow_html=True)
+            st.markdown("<h3>👤 Favorite Authors</h3>", unsafe_allow_html=True)
             top_authors = dict(list(stats['authors'].items())[:5])
             for author, count in top_authors.items():
                 st.markdown(f"**{author}**: {count} title{'s' if count > 1 else ''}")
