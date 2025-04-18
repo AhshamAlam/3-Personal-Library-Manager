@@ -48,6 +48,13 @@ st.markdown("""
         --card-bg: #FFFFFF;
     }
 
+    /* Emoji styling */
+    .emoji {
+        color: initial !important;
+        -webkit-text-fill-color: initial !important;
+        background: none !important;
+    }
+
     /* Main page header styling */
     .main-header {
         font-size: 3rem;
@@ -55,6 +62,9 @@ st.markdown("""
         margin-bottom: 1rem;
         text-align: center;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-header span {
         background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -432,11 +442,11 @@ def generate_visualizations(metrics: dict) -> None:
 fetch_library_data()
 
 # Create sidebar navigation
-st.sidebar.markdown("<h1 style='text-align: center;'>📋 Menu</h1>", unsafe_allow_html=True)
+st.sidebar.markdown("<h1 style='text-align: center;'><span class='emoji'>📋</span> Menu</h1>", unsafe_allow_html=True)
 st.sidebar.markdown("""
     <div style="text-align: center;">
-        <h1 style="color: var(--text-color);">📚 My Book Haven</h1>
-        <p style="color: var(--text-color);">✨ Your personal reading sanctuary ✨</p>
+        <h1><span class='emoji'>📚</span> My Book Haven</h1>
+        <p><span class='emoji'>✨</span> Your personal reading sanctuary <span class='emoji'>✨</span></p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -457,7 +467,7 @@ elif nav_options == "📊 Reading Insights":
     st.session_state.active_section = "stats"
 
 # Main page header
-st.markdown("<h1 class='main-header' style='color: var(--text-color);'>📚 My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'><span class='emoji'>📚</span> My Personal Reading Sanctuary</h1>", unsafe_allow_html=True)
 
 # Add Book View
 if st.session_state.active_section == "add":
