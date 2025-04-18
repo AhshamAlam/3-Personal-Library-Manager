@@ -74,7 +74,7 @@ st.markdown("""
     /* Success message styling */
     .success-message {
         padding: 1rem;
-        background-color: rgba(39, 174, 96, 0.1);
+        background: linear-gradient(90deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
         border-left: 4px solid var(--success-color);
         border-radius: 0.375rem;
         color: var(--success-color);
@@ -83,7 +83,7 @@ st.markdown("""
     /* Warning message styling */
     .warning-message {
         padding: 1rem;
-        background-color: rgba(230, 126, 34, 0.1);
+        background: linear-gradient(90deg, rgba(230, 126, 34, 0.1), rgba(230, 126, 34, 0.05));
         border-left: 4px solid var(--warning-color);
         border-radius: 0.375rem;
         color: var(--warning-color);
@@ -92,7 +92,7 @@ st.markdown("""
     /* Book card styling */
     .book-card {
         padding: 1.5rem;
-        background-color: var(--card-bg);
+        background: linear-gradient(135deg, var(--card-bg), #F8F9FA);
         border-left: 4px solid var(--accent-color);
         border-radius: 0.5rem;
         margin-bottom: 1rem;
@@ -105,26 +105,29 @@ st.markdown("""
         transform: translateY(-3px);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border-left: 4px solid var(--primary-color);
+        background: linear-gradient(135deg, #FFFFFF, #F8F9FA);
     }
 
     /* Read status badge styling */
     .read-badge {
         padding: 0.5rem 1rem;
-        background-color: var(--success-color);
+        background: linear-gradient(45deg, var(--success-color), #2ECC71);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
+        box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
     }
 
     /* Unread status badge styling */
     .unread-badge {
         padding: 0.5rem 1rem;
-        background-color: var(--warning-color);
+        background: linear-gradient(45deg, var(--warning-color), #F39C12);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
+        box-shadow: 0 2px 4px rgba(230, 126, 34, 0.2);
     }
 
     /* Action button spacing */
@@ -135,7 +138,7 @@ st.markdown("""
     /* Button styling */
     .stButton>button {
         border-radius: 0.375rem;
-        background-color: var(--accent-color);
+        background: linear-gradient(45deg, var(--accent-color), #2980B9);
         color: white;
         border: none;
         padding: 0.5rem 1rem;
@@ -144,7 +147,7 @@ st.markdown("""
     }
 
     .stButton>button:hover {
-        background-color: var(--primary-color);
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
@@ -155,6 +158,7 @@ st.markdown("""
         border-radius: 0.375rem;
         border: 1px solid #BDC3C7;
         padding: 0.5rem;
+        background: linear-gradient(180deg, #FFFFFF, #F8F9FA);
     }
 
     .stTextInput>div>div>input:focus,
@@ -162,23 +166,24 @@ st.markdown("""
     .stSelectbox>div>div>select:focus {
         border-color: var(--accent-color);
         box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        background: linear-gradient(180deg, #FFFFFF, #F8F9FA);
     }
 
     /* Radio button styling */
     .stRadio>div {
-        background-color: var(--bg-color);
+        background: linear-gradient(180deg, var(--bg-color), #F8F9FA);
         padding: 1rem;
         border-radius: 0.375rem;
     }
 
     /* Sidebar styling */
     .css-1d391kg {
-        background-color: var(--bg-color);
+        background: linear-gradient(180deg, var(--bg-color), #F8F9FA);
     }
 
     /* Metric card styling */
     .stMetric {
-        background-color: var(--card-bg);
+        background: linear-gradient(135deg, var(--card-bg), #F8F9FA);
         padding: 1rem;
         border-radius: 0.5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
