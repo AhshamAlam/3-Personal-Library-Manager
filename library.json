@@ -1,67 +1,62 @@
-[
+const books = [
   {
-    "title": "The Hitchhiker's Guide to the Galaxy",
-    "author": "Douglas Adams",
-    "publication_year": 1979,
-    "genre": "Science Fiction Comedy",
-    "read_status": "true",
-    "added_data": "2025-04-10 12:17:44"
+    title: "Console Wars",
+    author: "Blake J. Harris",
+    genre: "Gaming",
+    year: 2014
   },
   {
-    "title": "Good Omens",
-    "author": "Neil Gaiman and Terry Pratchett",
-    "publication_year": 1990,
-    "genre": "Fantasy Comedy",
-    "read_status": "false",
-    "added_data": "2025-03-29 15:23:09"
+    title: "The Girl with the Dragon Tattoo",
+    author: "Stieg Larsson",
+    genre: "Crime",
+    year: 2005
   },
   {
-    "title": "Bossypants",
-    "author": "Tina Fey",
-    "publication_year": 2011,
-    "genre": "Humor / Memoir",
-    "read_status": "true",
-    "added_data": "2025-04-05 19:41:18"
+    title: "Meditations",
+    author: "Marcus Aurelius",
+    genre: "Philosophy",
+    year: 180
   },
   {
-    "title": "Yes Please",
-    "author": "Amy Poehler",
-    "publication_year": 2014,
-    "genre": "Comedy / Memoir",
-    "read_status": "false",
-    "added_data": "2025-03-21 09:58:36"
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    genre: "Fantasy",
+    year: 1937
   },
   {
-    "title": "Me Talk Pretty One Day",
-    "author": "David Sedaris",
-    "publication_year": 2000,
-    "genre": "Essays / Humor",
-    "read_status": "true",
-    "added_data": "2025-04-12 22:05:52"
+    title: "Sapiens: A Brief History of Humankind",
+    author: "Yuval Noah Harari",
+    genre: "History",
+    year: 2011
   },
   {
-    "title": "Eleanor Oliphant Is Completely Fine",
-    "author": "Gail Honeyman",
-    "publication_year": 2017,
-    "genre": "Contemporary Fiction / Humor",
-    "read_status": "true",
-    "added_data": "2025-04-19 10:45:27"
+    title: "The Martian",
+    author: "Andy Weir",
+    genre: "Science Fiction",
+    year: 2011
   },
   {
-    "title": "Where'd You Go, Bernadette",
-    "author": "Maria Semple",
-    "publication_year": 2012,
-    "genre": "Satirical Fiction",
-    "read_status": "false",
-    "added_data": "2025-04-19 10:48:12"
+    title: "Educated",
+    author: "Tara Westover",
+    genre: "Memoir",
+    year: 2018
   },
   {
-    "title": "The Rosie Project",
-    "author": "Graeme Simsion",
-    "publication_year": 2013,
-    "genre": "Romantic Comedy",
-    "read_status": "true",
-    "added_data": "2025-04-19 10:51:39"
+    title: "Steve Jobs",
+    author: "Walter Isaacson",
+    genre: "Biography",
+    year: 2011
+  },
+  {
+    title: "The Subtle Art of Not Giving a F*ck",
+    author: "Mark Manson",
+    genre: "Self-Help",
+    year: 2016
+  },
+  {
+    title: "Born a Crime",
+    author: "Trevor Noah",
+    genre: "Humor",
+    year: 2016
   }
-]
-
+];
