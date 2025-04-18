@@ -235,7 +235,7 @@ if st.session_state.current_view == "addbook":
             author = st.text_input("Author", max_chars=100)
             publication_year = st.number_input("Publication Year", min_value=1000, max_value=datetime.now().year, step=1, value=2023)
         with col2:
-            genre = st.selectbox("Genre", ["Programming", "JavaScript", "Software Engineering", "Sci-Fi", "Fantasy", "Non-Fiction", "Romance", "Mystery", "Thriller", "Biography"])
+            genre = st.selectbox("Genre", ["Gaming", "Crime", "Philosophy", "Fantasy", "History", "Science Fiction", "Memoir", "Biography", "Self-Help", "Humor"])
             read_status = st.radio("Read Status", ["Read", "Unread"], horizontal=True)
             read_bool = read_status == "Read"
         submit_button = st.form_submit_button(label="Add Book")
