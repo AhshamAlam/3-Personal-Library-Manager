@@ -92,18 +92,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Function to load Lottie animation from URL with better error handling
-def load_lottieurl(url):
-    try:
-        r = requests.get(url)
-        if r.status_code == 200:
-            return r.json()
-        else:
-            st.warning("Could not load animation. Using default animation.")
-            return None
-    except Exception as e:
-        st.warning(f"Error loading animation: {str(e)}")
-        return None
 
 # Initialize session state variables
 if 'library' not in st.session_state:
