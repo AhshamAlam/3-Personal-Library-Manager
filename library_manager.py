@@ -138,17 +138,19 @@ st.markdown("""
     /* Button styling */
     .stButton>button {
         border-radius: 0.375rem;
-        background: linear-gradient(45deg, var(--accent-color), #2980B9);
+        background: linear-gradient(45deg, #4A6CF7, #6B46C1);
         color: white;
         border: none;
         padding: 0.5rem 1rem;
         font-weight: 500;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(75, 108, 247, 0.2);
     }
 
     .stButton>button:hover {
-        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(45deg, #3B5BDB, #553C9A);
+        box-shadow: 0 4px 6px rgba(75, 108, 247, 0.3);
+        transform: translateY(-1px);
     }
 
     /* Form input styling */
