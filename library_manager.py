@@ -321,7 +321,7 @@ if st.session_state.current_view == "add":
         with col2:
             genre = st.selectbox(
                 "Genre",
-                ["Programming", "Software Development", "JavaScript", "Software Engineering"]
+                ["Gaming", "Crime", "Philosophy", "Fantasy", "History", "Science Fiction", "Memoir", "Biography", "Self-Help", "Humor"]
             )
             read_status = st.radio("Read Status", ["Read", "Unread"], horizontal=True)
             read_bool = read_status == "Read"
@@ -426,6 +426,3 @@ elif st.session_state.current_view == "stats":
             for author, count in top_authors.items():
                 st.markdown(f"**{author}**: {count} book{'s' if count > 1 else ''}")
 
-# Footer
-st.markdown("---")
-st.markdown("Copyright 2025, Shahzar Khan. Personal Library Manager", unsafe_allow_html=True)
