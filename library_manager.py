@@ -35,74 +35,98 @@ st.set_page_config(
 # Defines styles for headers, messages, book cards, and buttons
 st.markdown("""
 <style>
+    /* Color Variables */
+    :root {
+        --primary-color: #4F46E5;
+        --secondary-color: #7C3AED;
+        --accent-color: #EC4899;
+        --success-color: #10B981;
+        --warning-color: #F59E0B;
+        --danger-color: #EF4444;
+        --text-color: #1F2937;
+        --bg-color: #F9FAFB;
+        --card-bg: #FFFFFF;
+    }
+
     /* Main page header styling */
     .main-header {
         font-size: 3rem;
-        color: #1E3A8A;
+        color: var(--primary-color);
         margin-bottom: 1rem;
         text-align: center;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     /* Section header styling */
     .sub-header {
         font-size: 2rem !important;
-        color: #3B82F6;
+        color: var(--secondary-color);
         font-weight: 600;
         margin-top: 1rem;
         margin-bottom: 1rem;
+        border-bottom: 3px solid var(--accent-color);
+        padding-bottom: 0.5rem;
     }
 
-    /* Success message styling (green) */
+    /* Success message styling */
     .success-message {
         padding: 1rem;
-        background-color: #ECFDF3;
-        border-left: 4px solid #10B981;
+        background-color: rgba(16, 185, 129, 0.1);
+        border-left: 4px solid var(--success-color);
         border-radius: 0.375rem;
+        color: var(--success-color);
     }
     
-    /* Warning message styling (yellow) */
+    /* Warning message styling */
     .warning-message {
         padding: 1rem;
-        background-color: #FEF3C7;
-        border-left: 4px solid #F59E0B;
+        background-color: rgba(245, 158, 11, 0.1);
+        border-left: 4px solid var(--warning-color);
         border-radius: 0.375rem;
+        color: var(--warning-color);
     }
 
     /* Book card styling */
     .book-card {
-        padding: 1rem;
-        background-color: #F3F4F6;
-        border-left: 4px solid #3B82F6;
-        border-radius: 0.5rem;
+        padding: 1.5rem;
+        background-color: var(--card-bg);
+        border-left: 4px solid var(--primary-color);
+        border-radius: 0.75rem;
         margin-bottom: 1rem;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
     /* Hover effect for book cards */
     .book-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--accent-color);
     }
 
     /* Read status badge styling */
     .read-badge {
-        padding: 0.25rem 0.75rem;
-        background-color: #10B981;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(45deg, var(--success-color), #34D399);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
     }
 
     /* Unread status badge styling */
     .unread-badge {
-        padding: 0.25rem 0.75rem;
-        background-color: #F87171;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(45deg, var(--warning-color), #FBBF24);
         color: white;
         border-radius: 1rem;
         font-size: 0.875rem;
         font-weight: 500;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
     }
 
     /* Action button spacing */
@@ -112,7 +136,54 @@ st.markdown("""
 
     /* Button styling */
     .stButton>button {
-        border-radius: 0.375rem;
+        border-radius: 0.5rem;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .stButton>button:hover {
+        background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form input styling */
+    .stTextInput>div>div>input,
+    .stNumberInput>div>div>input,
+    .stSelectbox>div>div>select {
+        border-radius: 0.5rem;
+        border: 2px solid #E5E7EB;
+        padding: 0.5rem;
+    }
+
+    .stTextInput>div>div>input:focus,
+    .stNumberInput>div>div>input:focus,
+    .stSelectbox>div>div>select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
+
+    /* Radio button styling */
+    .stRadio>div {
+        background-color: var(--bg-color);
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: linear-gradient(180deg, var(--bg-color), #FFFFFF);
+    }
+
+    /* Metric card styling */
+    .stMetric {
+        background-color: var(--card-bg);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
