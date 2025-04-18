@@ -1,25 +1,41 @@
-# Import necessary libraries
-import streamlit as st
-import pandas as pd
-import json
-import os
-from datetime import datetime
-import time
-import random
-import plotly.express as px
-import plotly.graph_objects as go
-import requests
+"""
+Personal Library Manager Application
+----------------------------------
+A Streamlit-based web application for managing a personal book library.
+Features include:
+- Adding and removing books
+- Searching books by title, author, or genre
+- Tracking read/unread status
+- Generating library statistics and visualizations
+- Persistent storage using JSON
+"""
+
+# Standard library imports
+import json      # For JSON file operations
+import os        # For file system operations
+import time      # For adding delays in UI
+from datetime import datetime  # For timestamping book additions
+
+# Third-party library imports
+import streamlit as st        # Web application framework
+import pandas as pd           # Data manipulation and analysis
+import plotly.express as px   # Interactive data visualization
+import plotly.graph_objects as go  # Custom plotly charts
+import requests               # For potential future API integrations
 
 # Configure Streamlit page settings
+# Sets up the web application with a wide layout and expanded sidebar
 st.set_page_config(
     page_title="Personal Library Manager",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
+# Custom CSS for styling the application
+# Defines styles for headers, messages, book cards, and buttons
 st.markdown("""
 <style>
+    /* Main page header styling */
     .main-header {
         font-size: 3rem;
         color: #1E3A8A;
@@ -28,6 +44,7 @@ st.markdown("""
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
+    /* Section header styling */
     .sub-header {
         font-size: 2rem !important;
         color: #3B82F6;
@@ -36,6 +53,7 @@ st.markdown("""
         margin-bottom: 1rem;
     }
 
+    /* Success message styling (green) */
     .success-message {
         padding: 1rem;
         background-color: #ECFDF3;
@@ -43,6 +61,7 @@ st.markdown("""
         border-radius: 0.375rem;
     }
     
+    /* Warning message styling (yellow) */
     .warning-message {
         padding: 1rem;
         background-color: #FEF3C7;
@@ -50,6 +69,7 @@ st.markdown("""
         border-radius: 0.375rem;
     }
 
+    /* Book card styling */
     .book-card {
         padding: 1rem;
         background-color: #F3F4F6;
@@ -59,11 +79,13 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
+    /* Hover effect for book cards */
     .book-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
+    /* Read status badge styling */
     .read-badge {
         padding: 0.25rem 0.75rem;
         background-color: #10B981;
@@ -73,6 +95,7 @@ st.markdown("""
         font-weight: 500;
     }
 
+    /* Unread status badge styling */
     .unread-badge {
         padding: 0.25rem 0.75rem;
         background-color: #F87171;
@@ -82,10 +105,12 @@ st.markdown("""
         font-weight: 500;
     }
 
+    /* Action button spacing */
     .action-button {
         margin-right: 0.5rem;
     }
 
+    /* Button styling */
     .stButton>button {
         border-radius: 0.375rem;
     }
@@ -93,166 +118,224 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize session state variables
-if 'library' not in st.session_state:
-    st.session_state.library = []               
-if 'search_results' not in st.session_state:
-    st.session_state.search_results = []
-if 'book_added' not in st.session_state:
-    st.session_state.book_added = False
-if 'book_removed' not in st.session_state:
-    st.session_state.book_removed = False
-if 'current_view' not in st.session_state:
-    st.session_state.current_view = 'library'
+# These variables persist across reruns of the Streamlit app
+if 'book_collection' not in st.session_state:
+    st.session_state.book_collection = []  # Stores all books in the library
+if 'search_output' not in st.session_state:
+    st.session_state.search_output = []    # Stores search results
+if 'new_book_flag' not in st.session_state:
+    st.session_state.new_book_flag = False # Flag for new book addition
+if 'book_deleted_flag' not in st.session_state:
+    st.session_state.book_deleted_flag = False # Flag for book deletion
+if 'active_section' not in st.session_state:
+    st.session_state.active_section = 'library' # Current active view
 
-# Function to load library data from JSON file
-def load_library():
+def fetch_library_data() -> bool:
+    """
+    Load library data from JSON file into session state.
+    This function reads the library.json file and loads its contents
+    into the application's session state.
+    
+    Returns:
+        bool: True if successful, False if file doesn't exist or error occurs
+    """
     try:
         if os.path.exists('library.json'):
             with open('library.json', 'r') as file:
-                st.session_state.library = json.load(file)
+                st.session_state.book_collection = json.load(file)
                 return True
         return False
     except Exception as e:
         st.error(f"Error loading library: {e}")
         return False
 
-# Function to save library data to JSON file
-def save_library():
+def persist_library_data() -> bool:
+    """
+    Save current library data to JSON file.
+    This function writes the current state of the library
+    to the library.json file for persistence.
+    
+    Returns:
+        bool: True if successful, False if error occurs
+    """
     try:
         with open('library.json', 'w') as file:
-            json.dump(st.session_state.library, file)
+            json.dump(st.session_state.book_collection, file)
             return True
     except Exception as e:
         st.error(f"Error saving library: {e}")
         return False
 
-# Function to add a new book to the library
-def add_book(title, author, publication_year, genre, read_status):
-    book = {
-        'title': title,
-        'author': author,
-        'publication_year': publication_year,
-        'genre': genre,
-        'read_status': read_status,
+def insert_book(book_title: str, book_author: str, pub_year: int, book_genre: str, is_read: bool) -> None:
+    """
+    Add a new book to the library.
+    Creates a new book entry with the provided details and adds it to the library.
+    Also updates the JSON file and sets the new book flag.
+    
+    Args:
+        book_title (str): Title of the book
+        book_author (str): Author of the book
+        pub_year (int): Year of publication
+        book_genre (str): Genre of the book
+        is_read (bool): Whether the book has been read
+    """
+    # Create new book entry with current timestamp
+    new_entry = {
+        'title': book_title,
+        'author': book_author,
+        'publication_year': pub_year,
+        'genre': book_genre,
+        'read_status': is_read,
         'added_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
-    st.session_state.library.append(book)
-    save_library()
-    st.session_state.book_added = True
-    time.sleep(0.5)
+    # Add to library and persist changes
+    st.session_state.book_collection.append(new_entry)
+    persist_library_data()
+    st.session_state.new_book_flag = True
+    time.sleep(0.5)  # Brief delay for UI feedback
 
-# Function to remove a book from the library
-def remove_book(index):
-    if 0 <= index < len(st.session_state.library):
-        del st.session_state.library[index]
-        save_library()
-        st.session_state.book_removed = True
+def delete_book(book_index: int) -> bool:
+    """
+    Remove a book from the library by index.
+    Deletes the book at the specified index and updates the JSON file.
+    
+    Args:
+        book_index (int): Index of the book to remove
+        
+    Returns:
+        bool: True if successful, False if index is invalid
+    """
+    if 0 <= book_index < len(st.session_state.book_collection):
+        del st.session_state.book_collection[book_index]
+        persist_library_data()
+        st.session_state.book_deleted_flag = True
         return True
     return False
 
-# Function to search books based on criteria
-def search_books(search_term, search_by):
-    search_term = search_term.lower()
-    results = []
-
-    for book in st.session_state.library:
-        if search_by == "Title" and search_term in book['title'].lower():
-            results.append(book)
-        elif search_by == "Author" and search_term in book['author'].lower():
-            results.append(book)
-        elif search_by == "Genre" and search_term in str(book['genre']):
-            results.append(book)
-    st.session_state.search_results = results
-
-# Function to calculate library statistics
-def get_library_stats():
-    total_books = len(st.session_state.library)
-    read_books = sum(1 for book in st.session_state.library if book['read_status'])
-    percent_read = (read_books / total_books * 100) if total_books > 0 else 0
+def find_books(search_query: str, search_field: str) -> None:
+    """
+    Search books in the library based on given criteria.
+    Performs case-insensitive search on the specified field
+    and stores results in session state.
     
-    # Initialize dictionaries for statistics
-    genres = {}
-    authors = {}
-    decades = {}
+    Args:
+        search_query (str): Term to search for
+        search_field (str): Field to search in ('Title', 'Author', or 'Genre')
+    """
+    search_query = search_query.lower()
+    matches = []
 
-    # Calculate statistics for each book
-    for book in st.session_state.library:
+    # Search through each book in the library
+    for book in st.session_state.book_collection:
+        if search_field == "Title" and search_query in book['title'].lower():
+            matches.append(book)
+        elif search_field == "Author" and search_query in book['author'].lower():
+            matches.append(book)
+        elif search_field == "Genre" and search_query in str(book['genre']):
+            matches.append(book)
+    st.session_state.search_output = matches
+
+def compute_library_metrics() -> dict:
+    """
+    Calculate various statistics about the library.
+    Computes metrics including total books, read status,
+    genre distribution, author distribution, and decade distribution.
+    
+    Returns:
+        dict: Dictionary containing library statistics including:
+            - total_books: Total number of books
+            - read_books: Number of read books
+            - percent_read: Percentage of books read
+            - genres: Count of books by genre
+            - authors: Count of books by author
+            - decades: Count of books by publication decade
+    """
+    # Calculate basic statistics
+    book_count = len(st.session_state.book_collection)
+    completed_books = sum(1 for book in st.session_state.book_collection if book['read_status'])
+    completion_rate = (completed_books / book_count * 100) if book_count > 0 else 0
+    
+    # Initialize dictionaries for distribution statistics
+    genre_distribution = {}
+    author_distribution = {}
+    decade_distribution = {}
+
+    # Calculate distribution statistics
+    for book in st.session_state.book_collection:
         # Count genres
-        if book['genre'] in genres:
-            genres[book['genre']] += 1
-        else:
-            genres[book['genre']] = 1
+        genre_distribution[book['genre']] = genre_distribution.get(book['genre'], 0) + 1
             
         # Count authors
-        if book['author'] in authors:
-            authors[book['author']] += 1
-        else:
-            authors[book['author']] = 1
+        author_distribution[book['author']] = author_distribution.get(book['author'], 0) + 1
 
         # Count books by decade
         decade = (book['publication_year'] // 10) * 10
-        if decade in decades:
-            decades[decade] += 1
-        else:
-            decades[decade] = 1
+        decade_distribution[decade] = decade_distribution.get(decade, 0) + 1
     
-    # Sort statistics
-    genres = dict(sorted(genres.items(), key=lambda x: x[1], reverse=True))
-    authors = dict(sorted(authors.items(), key=lambda x: x[1], reverse=True))
-    decades = dict(sorted(decades.items(), key=lambda x: x[0]))
+    # Sort distributions for better presentation
+    genre_distribution = dict(sorted(genre_distribution.items(), key=lambda x: x[1], reverse=True))
+    author_distribution = dict(sorted(author_distribution.items(), key=lambda x: x[1], reverse=True))
+    decade_distribution = dict(sorted(decade_distribution.items(), key=lambda x: x[0]))
 
     return {
-        'total_books': total_books,
-        'read_books': read_books,
-        'percent_read': percent_read,
-        'genres': genres,
-        'authors': authors,
-        'decades': decades
+        'total_books': book_count,
+        'read_books': completed_books,
+        'percent_read': completion_rate,
+        'genres': genre_distribution,
+        'authors': author_distribution,
+        'decades': decade_distribution
     }
 
-# Function to create visualizations for library statistics
-def create_visualizations(stats):
+def generate_visualizations(metrics: dict) -> None:
+    """
+    Create and display visualizations for library statistics.
+    Generates interactive charts using Plotly to visualize
+    the library's statistics.
+    
+    Args:
+        metrics (dict): Dictionary containing library statistics
+    """
     # Create pie chart for read vs unread books
-    if stats['total_books'] > 0:
-        fig_read_status = go.Figure(data=[go.Pie(
+    if metrics['total_books'] > 0:
+        read_status_chart = go.Figure(data=[go.Pie(
             labels=['Read', 'Unread'],
-            values=[stats['read_books'], stats['total_books'] - stats['read_books']],
+            values=[metrics['read_books'], metrics['total_books'] - metrics['read_books']],
             hole=0.4,
             marker_colors=['#10B981', '#F87171'],
         )])
-        fig_read_status.update_layout(
+        read_status_chart.update_layout(
             title_text='Read vs Unread Books',
             showlegend=True,
             height=400,
         )
-        st.plotly_chart(fig_read_status, use_container_width=True)
+        st.plotly_chart(read_status_chart, use_container_width=True)
     
     # Create bar chart for genres
-    if stats['genres']:
-        genres_df = pd.DataFrame({
-            'Genre': list(stats['genres'].keys()),
-            'Count': list(stats['genres'].values())
+    if metrics['genres']:
+        genre_data = pd.DataFrame({
+            'Genre': list(metrics['genres'].keys()),
+            'Count': list(metrics['genres'].values())
         })
-        fig_genres = px.bar(
-            genres_df,
+        genre_chart = px.bar(
+            genre_data,
             x='Genre',
             y='Count',
             color='Count',
             color_continuous_scale=px.colors.sequential.Blues,
         )
-        fig_genres.update_layout(
+        genre_chart.update_layout(
             title_text='Books by Genre',
             xaxis_title='Genre',
             yaxis_title='Number of Books',
             height=400,
         )
-        st.plotly_chart(fig_genres, use_container_width=True)
+        st.plotly_chart(genre_chart, use_container_width=True)
 
     # Create line chart for decades
-    if stats['decades']:
+    if metrics['decades']:
         decades_df = pd.DataFrame({
-            'Decade': [f'{decade}s' for decade in stats['decades'].keys()],
-            'Count': list(stats['decades'].values())
+            'Decade': [f'{decade}s' for decade in metrics['decades'].keys()],
+            'Count': list(metrics['decades'].values())
         })
         fig_decades = px.line(
             decades_df,
@@ -270,7 +353,7 @@ def create_visualizations(stats):
         st.plotly_chart(fig_decades, use_container_width=True)
 
 # Load library data
-load_library()
+fetch_library_data()
 
 # Create sidebar navigation
 st.sidebar.markdown("<h1 style='text-align: center;'>Navigation</h1>", unsafe_allow_html=True)
@@ -289,19 +372,19 @@ nav_options = st.sidebar.radio(
 
 # Set current view based on navigation selection
 if nav_options == "View Library":
-    st.session_state.current_view = "library"
+    st.session_state.active_section = "library"
 elif nav_options == "Add Book":
-    st.session_state.current_view = "add"
+    st.session_state.active_section = "add"
 elif nav_options == "Search Books":
-    st.session_state.current_view = "search"
+    st.session_state.active_section = "search"
 elif nav_options == "Library Statistics":
-    st.session_state.current_view = "stats"
+    st.session_state.active_section = "stats"
 
 # Main page header
 st.markdown("<h1 class='main-header'>Personal Library Manager</h1>", unsafe_allow_html=True)
 
 # Add Book View
-if st.session_state.current_view == "add":
+if st.session_state.active_section == "add":
     st.markdown("<h2 class='sub-header'>Add a new book</h2>", unsafe_allow_html=True)
 
     with st.form(key="add_book_form"):
@@ -329,21 +412,21 @@ if st.session_state.current_view == "add":
         submit_button = st.form_submit_button(label="Add Book")
 
         if submit_button:
-            add_book(title, author, publication_year, genre, read_bool)
+            insert_book(title, author, publication_year, genre, read_bool)
 
-    if st.session_state.book_added:
+    if st.session_state.new_book_flag:
         st.markdown("<div class='success-message'>Book added successfully!</div>", unsafe_allow_html=True)
-        st.session_state.book_added = False
+        st.session_state.new_book_flag = False
 
 # View Library
-elif st.session_state.current_view == "library":
+elif st.session_state.active_section == "library":
     st.markdown("<h2 class='sub-header'>Your Library</h2>", unsafe_allow_html=True)
 
-    if not st.session_state.library:
+    if not st.session_state.book_collection:
         st.markdown("<div class='warning-message'>Your library is empty. Add some books to get started!</div>", unsafe_allow_html=True)
     else:
         cols = st.columns(2)
-        for i, book in enumerate(st.session_state.library):
+        for i, book in enumerate(st.session_state.book_collection):
             with cols[i % 2]:
                 st.markdown(f"""
                 <div class='book-card'>
@@ -358,22 +441,22 @@ elif st.session_state.current_view == "library":
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.button(f"Remove", key=f"remove_{i}", use_container_width=True):
-                        if remove_book(i):
+                        if delete_book(i):
                             st.rerun()
                 with col2:
                     new_status = not book['read_status']
                     status_label = "Mark as Read" if not book['read_status'] else "Mark as Unread"
                     if st.button(status_label, key=f"status_{i}", use_container_width=True):
-                        st.session_state.library[i]['read_status'] = new_status
-                        save_library()
+                        st.session_state.book_collection[i]['read_status'] = new_status
+                        persist_library_data()
                         st.rerun()
 
-    if st.session_state.book_removed:
+    if st.session_state.book_deleted_flag:
         st.markdown("<div class='success-message'>Book removed successfully!</div>", unsafe_allow_html=True)
-        st.session_state.book_removed = False
+        st.session_state.book_deleted_flag = False
 
 # Search Books View
-elif st.session_state.current_view == "search":
+elif st.session_state.active_section == "search":
     st.markdown("<h2 class='sub-header'>Search Books</h2>", unsafe_allow_html=True)
 
     search_by = st.selectbox("Search by", ["Title", "Author", "Genre"])
@@ -382,14 +465,14 @@ elif st.session_state.current_view == "search":
     if st.button("Search", use_container_width=False):
         if search_term:
             with st.spinner("Searching..."):
-                search_books(search_term, search_by)
+                find_books(search_term, search_by)
                 time.sleep(0.5)
 
-    if hasattr(st.session_state, 'search_results'):
-        if st.session_state.search_results:
-            st.markdown(f"<h3>Found {len(st.session_state.search_results)} Results</h3>", unsafe_allow_html=True)
+    if hasattr(st.session_state, 'search_output'):
+        if st.session_state.search_output:
+            st.markdown(f"<h3>Found {len(st.session_state.search_output)} Results</h3>", unsafe_allow_html=True)
 
-            for i, book in enumerate(st.session_state.search_results):
+            for i, book in enumerate(st.session_state.search_output):
                 st.markdown(f"""
                 <div class='book-card'>
                     <h3>{book['title']}</h3>
@@ -403,13 +486,13 @@ elif st.session_state.current_view == "search":
             st.markdown("<div class='warning-message'>No results found. Please try a different search term.</div>", unsafe_allow_html=True)
 
 # Library Statistics View
-elif st.session_state.current_view == "stats":
+elif st.session_state.active_section == "stats":
     st.markdown("<h2 class='sub-header'>Library Statistics</h2>", unsafe_allow_html=True)
 
-    if not st.session_state.library:
+    if not st.session_state.book_collection:
         st.markdown("<div class='warning-message'>Your library is empty. Add some books to get started!</div>", unsafe_allow_html=True)
     else:
-        stats = get_library_stats()
+        stats = compute_library_metrics()
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Total Books", value=stats['total_books'])
@@ -418,7 +501,7 @@ elif st.session_state.current_view == "stats":
         with col3:
             st.metric("Percent Read", f"{stats['percent_read']:.1f}%")
 
-        create_visualizations(stats)
+        generate_visualizations(stats)
 
         if stats['authors']:
             st.markdown("<h3>Top Authors</h3>", unsafe_allow_html=True)
