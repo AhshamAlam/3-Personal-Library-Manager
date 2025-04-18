@@ -1,4 +1,3 @@
-
 # Import necessary libraries
 import streamlit as st
 import pandas as pd
@@ -184,49 +183,27 @@ def get_library_stats():
     read_books = sum(1 for book in st.session_state.library if book['read_status'])
     percent_read = (read_books / total_books * 100) if total_books > 0 else 0
     
-    # Initialize dictionaries for statistics
     genres = {}
     authors = {}
     decades = {}
 
-    # Calculate statistics for each book
     for book in st.session_state.library:
-        # Count genres
-        if book['genre'] in genres:
-            genres[book['genre']] += 1
-        else:
-            genres[book['genre']] = 1
-            
-        # Count authors
-        if book['author'] in authors:
-            authors[book['author']] += 1
-        else:
-            authors[book['author']] = 1
-
-        # Count books by decade
+        genres[book['genre']] = genres.get(book['genre'], 0) + 1
+        authors[book['author']] = authors.get(book['author'], 0) + 1
         decade = (book['publication_year'] // 10) * 10
-        if decade in decades:
-            decades[decade] += 1
-        else:
-            decades[decade] = 1
-    
-    # Sort statistics
-    genres = dict(sorted(genres.items(), key=lambda x: x[1], reverse=True))
-    authors = dict(sorted(authors.items(), key=lambda x: x[1], reverse=True))
-    decades = dict(sorted(decades.items(), key=lambda x: x[0]))
+        decades[decade] = decades.get(decade, 0) + 1
 
     return {
         'total_books': total_books,
         'read_books': read_books,
         'percent_read': percent_read,
-        'genres': genres,
-        'authors': authors,
-        'decades': decades
+        'genres': dict(sorted(genres.items(), key=lambda x: x[1], reverse=True)),
+        'authors': dict(sorted(authors.items(), key=lambda x: x[1], reverse=True)),
+        'decades': dict(sorted(decades.items(), key=lambda x: x[0]))
     }
 
 # Function to create visualizations for library statistics
 def create_visualizations(stats):
-    # Create pie chart for read vs unread books
     if stats['total_books'] > 0:
         fig_read_status = go.Figure(data=[go.Pie(
             labels=['Read', 'Unread'],
@@ -234,202 +211,49 @@ def create_visualizations(stats):
             hole=0.4,
             marker_colors=['#10B981', '#F87171'],
         )])
-        fig_read_status.update_layout(
-            title_text='Read vs Unread Books',
-            showlegend=True,
-            height=400,
-        )
+        fig_read_status.update_layout(title_text='Read vs Unread Books', height=400)
         st.plotly_chart(fig_read_status, use_container_width=True)
-    
-    # Create bar chart for genres
+
     if stats['genres']:
-        genres_df = pd.DataFrame({
-            'Genre': list(stats['genres'].keys()),
-            'Count': list(stats['genres'].values())
-        })
-        fig_genres = px.bar(
-            genres_df,
-            x='Genre',
-            y='Count',
-            color='Count',
-            color_continuous_scale=px.colors.sequential.Blues,
-        )
-        fig_genres.update_layout(
-            title_text='Books by Genre',
-            xaxis_title='Genre',
-            yaxis_title='Number of Books',
-            height=400,
-        )
+        genres_df = pd.DataFrame({'Genre': list(stats['genres'].keys()), 'Count': list(stats['genres'].values())})
+        fig_genres = px.bar(genres_df, x='Genre', y='Count', color='Count', color_continuous_scale=px.colors.sequential.Blues)
+        fig_genres.update_layout(title_text='Books by Genre', height=400)
         st.plotly_chart(fig_genres, use_container_width=True)
 
-    # Create line chart for decades
     if stats['decades']:
-        decades_df = pd.DataFrame({
-            'Decade': [f'{decade}s' for decade in stats['decades'].keys()],
-            'Count': list(stats['decades'].values())
-        })
-        fig_decades = px.line(
-            decades_df,
-            x='Decade',
-            y='Count',
-            markers=True,
-            line_shape='spline',
-        )
-        fig_decades.update_layout(
-            title_text='Books by Publication Decade',
-            xaxis_title='Decade',
-            yaxis_title='Number of Books',
-            height=400,
-        )
+        decades_df = pd.DataFrame({'Decade': [f'{dec}s' for dec in stats['decades'].keys()], 'Count': list(stats['decades'].values())})
+        fig_decades = px.line(decades_df, x='Decade', y='Count', markers=True, line_shape='spline')
+        fig_decades.update_layout(title_text='Books by Publication Decade', height=400)
         st.plotly_chart(fig_decades, use_container_width=True)
 
 # Load library data
 load_library()
 
-# Create sidebar navigation
+# Sidebar navigation
 st.sidebar.markdown("<h1 style='text-align: center;'>Navigation</h1>", unsafe_allow_html=True)
+nav_options = st.sidebar.radio("Choose an option", ["View Library", "Add Book", "Search Books", "Library Statistics"])
 
-# Create navigation options
-nav_options = st.sidebar.radio(
-    "Choose an option",
-    ["View Library", "Add Book", "Search Books", "Library Statistics"]
-)
+st.session_state.current_view = nav_options.lower().replace(" ", "")
 
-# Set current view based on navigation selection
-if nav_options == "View Library":
-    st.session_state.current_view = "library"
-elif nav_options == "Add Book":
-    st.session_state.current_view = "add"
-elif nav_options == "Search Books":
-    st.session_state.current_view = "search"
-elif nav_options == "Library Statistics":
-    st.session_state.current_view = "stats"
-
-# Main page header
 st.markdown("<h1 class='main-header'>Personal Library Manager</h1>", unsafe_allow_html=True)
 
-# Add Book View
-if st.session_state.current_view == "add":
+if st.session_state.current_view == "addbook":
     st.markdown("<h2 class='sub-header'>Add a new book</h2>", unsafe_allow_html=True)
 
     with st.form(key="add_book_form"):
         col1, col2 = st.columns(2)
-
         with col1:
             title = st.text_input("Book Title", max_chars=100)
             author = st.text_input("Author", max_chars=100)
-            publication_year = st.number_input(
-                "Publication Year",
-                min_value=1000,
-                max_value=datetime.now().year,
-                step=1,
-                value=2023
-            )
-
+            publication_year = st.number_input("Publication Year", min_value=1000, max_value=datetime.now().year, step=1, value=2023)
         with col2:
-            genre = st.selectbox(
-                "Genre",
-                ["Programming", "Software Development", "JavaScript", "Software Engineering"]
-            )
+            genre = st.selectbox("Genre", ["Programming", "JavaScript", "Software Engineering", "Sci-Fi", "Fantasy", "Non-Fiction", "Romance", "Mystery", "Thriller", "Biography"])
             read_status = st.radio("Read Status", ["Read", "Unread"], horizontal=True)
             read_bool = read_status == "Read"
-
         submit_button = st.form_submit_button(label="Add Book")
-
         if submit_button:
             add_book(title, author, publication_year, genre, read_bool)
 
     if st.session_state.book_added:
         st.markdown("<div class='success-message'>Book added successfully!</div>", unsafe_allow_html=True)
         st.session_state.book_added = False
-
-# View Library
-elif st.session_state.current_view == "library":
-    st.markdown("<h2 class='sub-header'>Your Library</h2>", unsafe_allow_html=True)
-
-    if not st.session_state.library:
-        st.markdown("<div class='warning-message'>Your library is empty. Add some books to get started!</div>", unsafe_allow_html=True)
-    else:
-        cols = st.columns(2)
-        for i, book in enumerate(st.session_state.library):
-            with cols[i % 2]:
-                st.markdown(f"""
-                <div class='book-card'>
-                    <h3>{book['title']}</h3>
-                    <p><strong>Author:</strong> {book['author']}</p>
-                    <p><strong>Publication Year:</strong> {book['publication_year']}</p>
-                    <p><strong>Genre:</strong> {book['genre']}</p>
-                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"Read" if book['read_status'] else "Unread"}</span></p>
-                </div>
-                """, unsafe_allow_html=True)
-
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button(f"Remove", key=f"remove_{i}", use_container_width=True):
-                        if remove_book(i):
-                            st.rerun()
-                with col2:
-                    new_status = not book['read_status']
-                    status_label = "Mark as Read" if not book['read_status'] else "Mark as Unread"
-                    if st.button(status_label, key=f"status_{i}", use_container_width=True):
-                        st.session_state.library[i]['read_status'] = new_status
-                        save_library()
-                        st.rerun()
-
-    if st.session_state.book_removed:
-        st.markdown("<div class='success-message'>Book removed successfully!</div>", unsafe_allow_html=True)
-        st.session_state.book_removed = False
-
-# Search Books View
-elif st.session_state.current_view == "search":
-    st.markdown("<h2 class='sub-header'>Search Books</h2>", unsafe_allow_html=True)
-
-    search_by = st.selectbox("Search by", ["Title", "Author", "Genre"])
-    search_term = st.text_input("Search term")
-
-    if st.button("Search", use_container_width=False):
-        if search_term:
-            with st.spinner("Searching..."):
-                search_books(search_term, search_by)
-                time.sleep(0.5)
-
-    if hasattr(st.session_state, 'search_results'):
-        if st.session_state.search_results:
-            st.markdown(f"<h3>Found {len(st.session_state.search_results)} Results</h3>", unsafe_allow_html=True)
-
-            for i, book in enumerate(st.session_state.search_results):
-                st.markdown(f"""
-                <div class='book-card'>
-                    <h3>{book['title']}</h3>
-                    <p><strong>Author:</strong> {book['author']}</p>
-                    <p><strong>Publication Year:</strong> {book['publication_year']}</p>
-                    <p><strong>Genre:</strong> {book['genre']}</p>
-                    <p><span class="{'read-badge' if book['read_status'] else 'unread-badge'}">{"Read" if book['read_status'] else "Unread"}</span></p>
-                </div>
-                """, unsafe_allow_html=True)
-        elif search_term:
-            st.markdown("<div class='warning-message'>No results found. Please try a different search term.</div>", unsafe_allow_html=True)
-
-# Library Statistics View
-elif st.session_state.current_view == "stats":
-    st.markdown("<h2 class='sub-header'>Library Statistics</h2>", unsafe_allow_html=True)
-
-    if not st.session_state.library:
-        st.markdown("<div class='warning-message'>Your library is empty. Add some books to get started!</div>", unsafe_allow_html=True)
-    else:
-        stats = get_library_stats()
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Total Books", value=stats['total_books'])
-        with col2:
-            st.metric("Read Books", value=stats['read_books'])
-        with col3:
-            st.metric("Percent Read", f"{stats['percent_read']:.1f}%")
-
-        create_visualizations(stats)
-
-        if stats['authors']:
-            st.markdown("<h3>Top Authors</h3>", unsafe_allow_html=True)
-            top_authors = dict(list(stats['authors'].items())[:5])
-            for author, count in top_authors.items():
-                st.markdown(f"**{author}**: {count} book{'s' if count > 1 else ''}")
