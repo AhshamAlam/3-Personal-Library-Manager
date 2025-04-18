@@ -1,0 +1,67 @@
+[
+  {
+    "title": "The Hitchhiker's Guide to the Galaxy",
+    "author": "Douglas Adams",
+    "publication_year": 1979,
+    "genre": "Science Fiction Comedy",
+    "read_status": "true",
+    "added_data": "2025-04-10 12:17:44"
+  },
+  {
+    "title": "Good Omens",
+    "author": "Neil Gaiman and Terry Pratchett",
+    "publication_year": 1990,
+    "genre": "Fantasy Comedy",
+    "read_status": "false",
+    "added_data": "2025-03-29 15:23:09"
+  },
+  {
+    "title": "Bossypants",
+    "author": "Tina Fey",
+    "publication_year": 2011,
+    "genre": "Humor / Memoir",
+    "read_status": "true",
+    "added_data": "2025-04-05 19:41:18"
+  },
+  {
+    "title": "Yes Please",
+    "author": "Amy Poehler",
+    "publication_year": 2014,
+    "genre": "Comedy / Memoir",
+    "read_status": "false",
+    "added_data": "2025-03-21 09:58:36"
+  },
+  {
+    "title": "Me Talk Pretty One Day",
+    "author": "David Sedaris",
+    "publication_year": 2000,
+    "genre": "Essays / Humor",
+    "read_status": "true",
+    "added_data": "2025-04-12 22:05:52"
+  },
+  {
+    "title": "Eleanor Oliphant Is Completely Fine",
+    "author": "Gail Honeyman",
+    "publication_year": 2017,
+    "genre": "Contemporary Fiction / Humor",
+    "read_status": "true",
+    "added_data": "2025-04-19 10:45:27"
+  },
+  {
+    "title": "Where'd You Go, Bernadette",
+    "author": "Maria Semple",
+    "publication_year": 2012,
+    "genre": "Satirical Fiction",
+    "read_status": "false",
+    "added_data": "2025-04-19 10:48:12"
+  },
+  {
+    "title": "The Rosie Project",
+    "author": "Graeme Simsion",
+    "publication_year": 2013,
+    "genre": "Romantic Comedy",
+    "read_status": "true",
+    "added_data": "2025-04-19 10:51:39"
+  }
+]
+
