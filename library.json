@@ -1,62 +1,82 @@
-const books = [
+[
   {
-    title: "Console Wars",
-    author: "Blake J. Harris",
-    genre: "Gaming",
-    year: 2014
+    "title": "Console Wars",
+    "author": "Blake J. Harris",
+    "publication_year": 2014,
+    "genre": "Gaming",
+    "read_status": "true",
+    "added_data": "2025-03-10 11:15:22"
   },
   {
-    title: "The Girl with the Dragon Tattoo",
-    author: "Stieg Larsson",
-    genre: "Crime",
-    year: 2005
+    "title": "The Girl with the Dragon Tattoo",
+    "author": "Stieg Larsson",
+    "publication_year": 2005,
+    "genre": "Crime",
+    "read_status": "false",
+    "added_data": "2025-02-24 18:42:09"
   },
   {
-    title: "Meditations",
-    author: "Marcus Aurelius",
-    genre: "Philosophy",
-    year: 180
+    "title": "Meditations",
+    "author": "Marcus Aurelius",
+    "publication_year": 180,
+    "genre": "Philosophy",
+    "read_status": "true",
+    "added_data": "2025-01-31 09:03:45"
   },
   {
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    genre: "Fantasy",
-    year: 1937
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "publication_year": 1937,
+    "genre": "Fantasy",
+    "read_status": "true",
+    "added_data": "2025-03-22 20:10:34"
   },
   {
-    title: "Sapiens: A Brief History of Humankind",
-    author: "Yuval Noah Harari",
-    genre: "History",
-    year: 2011
+    "title": "Sapiens: A Brief History of Humankind",
+    "author": "Yuval Noah Harari",
+    "publication_year": 2011,
+    "genre": "History",
+    "read_status": "false",
+    "added_data": "2025-03-18 17:39:04"
   },
   {
-    title: "The Martian",
-    author: "Andy Weir",
-    genre: "Science Fiction",
-    year: 2011
+    "title": "The Martian",
+    "author": "Andy Weir",
+    "publication_year": 2011,
+    "genre": "Science Fiction",
+    "read_status": "true",
+    "added_data": "2025-03-14 13:25:59"
   },
   {
-    title: "Educated",
-    author: "Tara Westover",
-    genre: "Memoir",
-    year: 2018
+    "title": "Educated",
+    "author": "Tara Westover",
+    "publication_year": 2018,
+    "genre": "Memoir",
+    "read_status": "false",
+    "added_data": "2025-02-12 10:45:13"
   },
   {
-    title: "Steve Jobs",
-    author: "Walter Isaacson",
-    genre: "Biography",
-    year: 2011
+    "title": "Steve Jobs",
+    "author": "Walter Isaacson",
+    "publication_year": 2011,
+    "genre": "Biography",
+    "read_status": "false",
+    "added_data": "2025-03-03 15:18:47"
   },
   {
-    title: "The Subtle Art of Not Giving a F*ck",
-    author: "Mark Manson",
-    genre: "Self-Help",
-    year: 2016
+    "title": "The Subtle Art of Not Giving a F*ck",
+    "author": "Mark Manson",
+    "publication_year": 2016,
+    "genre": "Self-Help",
+    "read_status": "true",
+    "added_data": "2025-03-29 08:56:20"
   },
   {
-    title: "Born a Crime",
-    author: "Trevor Noah",
-    genre: "Humor",
-    year: 2016
+    "title": "Born a Crime",
+    "author": "Trevor Noah",
+    "publication_year": 2016,
+    "genre": "Humor",
+    "read_status": "false",
+    "added_data": "2025-04-01 14:30:12"
   }
-];
+]
